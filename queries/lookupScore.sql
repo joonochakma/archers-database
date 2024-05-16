@@ -11,6 +11,6 @@ INNER JOIN
 INNER JOIN 
     EndScores ON EndScores.CategoryID = Category.ID
 WHERE 
-    ArcherInfo.FirstName = 'Archer_First_Name' --replace the first name
+    ArcherInfo.FirstName = 'Archer_First_Name' 
 AND 
-    ArcherInfo.LastName = 'Archer_Last_Name'; --replace the last name
+    ArcherInfo.LastName = 'Archer_Last_Name'; 
