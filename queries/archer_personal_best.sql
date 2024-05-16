@@ -1,4 +1,3 @@
---checks the personal best score
 SELECT
     ArcherInfo.FirstName,
     ArcherInfo.LastName,
@@ -9,6 +8,9 @@ INNER JOIN
     Category ON EndScores.CategoryID = Category.ID
 INNER JOIN
     ArcherInfo ON Category.ArcherID = ArcherInfo.ID
+WHERE
+    ArcherInfo.FirstName = 'Nettie' 
+    AND ArcherInfo.LastName = 'Kerne'
 GROUP BY
     ArcherInfo.ID,
     ArcherInfo.FirstName,
