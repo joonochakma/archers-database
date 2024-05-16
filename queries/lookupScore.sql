@@ -1,4 +1,6 @@
 SELECT 
+    ArcherInfo.FirstName AS FirstName,
+    ArcherInfo.LastName AS LastName,
     EndScores.ScoreDateTime AS ScoreDateTime,
     Rounds.RoundName AS RoundName,
     EndScores.Score AS Score
