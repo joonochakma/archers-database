@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS Ranges;
 CREATE TABLE Classification(
     ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     MinimumAge INT NOT NULL,
-    MaaximumAge INT NOT NULL,
+    MaximumAge INT NOT NULL,
     Gender ENUM('M', 'F'),
     Description VARCHAR(255) NOT NULL
     
