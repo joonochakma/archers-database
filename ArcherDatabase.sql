@@ -52,7 +52,7 @@ CREATE TABLE Rounds(
 
 
 
--- Equipment description
+-- Division 
 CREATE TABLE Division(
     ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Equipment VARCHAR(5) NOT NULL,
