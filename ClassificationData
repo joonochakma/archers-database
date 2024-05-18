@@ -1,0 +1,17 @@
+INSERT INTO Classification (MinimumAge, MaximumAge, Gender, Description) VALUES
+(0, 13, 'M', 'Under 14 Male'),
+(0, 13, 'F', 'Under 14 Female'),
+(14, 15, 'M', 'Under 16 Male'),
+(14, 15, 'F', 'Under 16 Female'),
+(16, 17, 'M', 'Under 18 Male'),
+(16, 17, 'F', 'Under 18 Female'),
+(18, 20, 'M', 'Under 21 Male'),
+(18, 20, 'F', 'Under 21 Female'),
+(21, 49, 'M', 'Male Open'),
+(21, 49, 'F', 'Female Open'),
+(50, 59, 'M', '50+ Male'),
+(50, 59, 'F', '50+ Female'),
+(60, 69, 'M', '60+ Male'),
+(60, 69, 'F', '60+ Female'),
+(70, 101, 'M', '70+ Male'),
+(70, 101, 'F', '70+ Female');
