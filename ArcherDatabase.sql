@@ -7,6 +7,30 @@ DROP TABLE IF EXISTS Rounds;
 DROP TABLE IF EXISTS ClubCompetition;
 DROP TABLE IF EXISTS EquipmentDescription;
 DROP TABLE IF EXISTS ArcherInfo;
+DROP TABLE IF EXISTS Classification;
+DROP TABLE IF EXISTS Face;
+DROP TABLE IF EXISTS Division;
+DROP TABLE IF EXISTS Ranges;
+
+
+CREATE TABLE Classification(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    MinimumAge INT NOT NULL,
+    MaaximumAge INT NOT NULL,
+    Gender ENUM('M', 'F'),
+    Description VARCHAR(255) NOT NULL
+    
+    );
+
+CREATE UNIQUE INDEX IDX_Description ON Classification(Description);
+
+CREATE TABLE Face(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    FaceSymbol ENUM('+','*'),
+    FaceSize ENUM('120cm','80cm')
+    );
+
+CREATE UNIQUE INDEX IDX_FaceSymbol ON Face(FaceSymbol);
 
 -- TABLES
 -- ArcherInfo_Table
@@ -32,25 +56,33 @@ CREATE TABLE Rounds(
 CREATE TABLE Division(
     ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Equipment VARCHAR(5) NOT NULL,
-    Description VARCHAR(255) NOT NULL,
-);
-
--- Default Equipment
-CREATE TABLE DefaultEquipment(
-    RoundID INT NOT NULL,
-    Category VARCHAR(255) NOT NULL,
-    DivisionID INT NOT NULL.
-    FOREIGN KEY (RoundID) REFERENCES Rounds(ID),
-    FOREIGN KEY (DivisionID) REFERENCES Division(ID)
+    Description VARCHAR(255) NOT NULL
 );
 
 -- Club Competition
 CREATE TABLE ClubCompetition(
     ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     CompetitionName VARCHAR(255),
-    Championship VARCHAR(255) DEFAULT NULL,
-   
+    Championship VARCHAR(255) DEFAULT NULL
+ 
 );
+
+CREATE TABLE Ranges(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Distance ENUM('10m','20m','30m','40m','50m','60m','70m','90m')
+    );
+
+-- Default Equipment
+CREATE TABLE DefaultEquipment(
+    RoundID INT NOT NULL,
+    ClassificationID INT NOT NULL,
+    DivisionID INT NOT NULL,
+    FOREIGN KEY (RoundID) REFERENCES Rounds(ID),
+    FOREIGN KEY (DivisionID) REFERENCES Division(ID),
+    FOREIGN KEY (ClassificationID) REFERENCES Classification(ID)
+);
+
+
 
 -- Category
 CREATE TABLE Category (
@@ -58,7 +90,7 @@ CREATE TABLE Category (
     ArcherID INT NOT NULL,
     CompetitionID INT NOT NULL,
     RoundID INT NOT NULL,
-    ClassificationID  VARCHAR(255) NOT NULL,
+    ClassificationID  INT NOT NULL,
     RegisterYear YEAR,
     DivisionID INT NOT NULL,
     
@@ -69,10 +101,7 @@ CREATE TABLE Category (
     FOREIGN KEY (ClassificationID) REFERENCES Classification(ID)
 );
 
-CREATE TABLE Ranges(
-    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    Distance ENUM('10m','20m','30m','40m','50m','60m','70m','90m')
-    );
+
 
 -- ArrowScore_Table
 CREATE TABLE EndScores(
@@ -94,17 +123,14 @@ CREATE TABLE EndScores(
     RoundID INT NOT NULL AUTO_INCREMENT,
     RangeID INT NOT NULL,
     ArrowsNo INT NOT NULL,
-    FaceSymbol ENUM('+','*'),
+    FaceID INT NOT NULL,
 
     FOREIGN KEY (RoundID) REFERENCES Rounds(ID),
     FOREIGN KEY (RangeID) REFERENCES Ranges(ID),
-    FOREIGN KEY (FaceSymbol) REFERENCES Face(FaceSymbol)
+    FOREIGN KEY (FaceID) REFERENCES Face(ID)
     );
 
-    CREATE TABLE Face(
-    FaceSymbol ENUM('+','*') PRIMARY KEY,
-    FaceSize ENUM('120cm','80cm'),
-    );
+    
 
     CREATE TABLE StagingScore(
     ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -115,7 +141,6 @@ CREATE TABLE EndScores(
     DivisionID INT NOT NULL,
     RoundID INT NOT NULL,
     CompetitionID INT NOT NULL,
-
     FOREIGN KEY (CategoryID) REFERENCES Category(ID),
     FOREIGN KEY (ArcherID) REFERENCES ArcherInfo(ID),
     FOREIGN KEY (DivisionID) REFERENCES Division(ID),
@@ -123,11 +148,4 @@ CREATE TABLE EndScores(
     FOREIGN KEY (CompetitionID) REFERENCES ClubCompetition(ID)
     );
 
-    CREATE TABLE Classification(
-    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    MinimumAge INT NOT NULL,
-    MaaximumAge INT NOT NULL,
-    Gender ENUM('M', 'F'),
-    Description VARCHAR(255) NOT NULL,
-   
-    );
+    
