@@ -1,8 +1,6 @@
 INSERT INTO Ranges (`Distance`) VALUES
 ('10m'),
 ('20m'),
-('10m'),
-('20m'),
 ('30m'),
 ('40m'),
 ('50m'),
