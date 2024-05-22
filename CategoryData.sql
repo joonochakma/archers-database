@@ -1,50 +1,21 @@
-INSERT INTO Category (ArcherID, CompetitionID, RoundID, ClassificationID, RegisterYear, DivisionID) VALUES (1 ,1, 1, 29,'2013', 1);
+/* INSERT INTO Category (ArcherID, CompetitionID, RoundID, ClassificationID, RegisterYear, DivisionID) VALUES (1 ,1, 1, 29,'2013', 1); */
 
-
-INSERT INTO Category (
-    ArcherID,
-    CompetitionID,
-    RoundID,
-    ClassificationID,
-    RegisterYear,
-    DivisionID
-)
-SELECT
-    a.ID,
-    1, -- Example CompetitionID
-    1, -- Example RoundID
+-- Insert data into Category table with Classification determined by DOB and random CompetitionID, RoundID, and DivisionID
+INSERT INTO Category (ArcherID, CompetitionID, RoundID, ClassificationID, RegisterYear, DivisionID)
+SELECT 
+    ArcherInfo.ID AS ArcherID,
+    FLOOR(RAND() * (SELECT MAX(ID) FROM ClubCompetition)) + 1 AS CompetitionID, -- Random CompetitionID
+    FLOOR(RAND() * (SELECT MAX(ID) FROM Rounds)) + 1 AS RoundID, -- Random RoundID
     (
         SELECT ID
-        FROM Classification c
-        WHERE 
-            a.Gender = c.Gender
-            AND (
-                (TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= c.MinimumAge AND (c.MaximumAge IS NULL OR TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) <= c.MaximumAge))
-            )
-            AND (
-                (c.Description = 'Under 14 Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 14) OR
-                (c.Description = 'Under 14 Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 14) OR
-                (c.Description = 'Under 16 Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 16) OR
-                (c.Description = 'Under 16 Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 16) OR
-                (c.Description = 'Under 18 Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 18) OR
-                (c.Description = 'Under 18 Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 18) OR
-                (c.Description = 'Under 21 Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 21) OR
-                (c.Description = 'Under 21 Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 21) OR
-                (c.Description = 'Male Open' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 21 AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 50) OR
-                (c.Description = 'Female Open' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 21 AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 50) OR
-                (c.Description = '50+ Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 50 AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 60) OR
-                (c.Description = '50+ Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 50 AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 60) OR
-                (c.Description = '60+ Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 60 AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 70) OR
-                (c.Description = '60+ Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 60 AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) < 70) OR
-                (c.Description = '70+ Male' AND a.Gender = 'M' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 70) OR
-                (c.Description = '70+ Female' AND a.Gender = 'F' AND TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) >= 70)
-            )
+        FROM Classification
+        WHERE
+            (YEAR(NOW()) - YEAR(ArcherInfo.DOB)) BETWEEN Classification.MinimumAge AND Classification.MaximumAge
+            AND ArcherInfo.Gender = Classification.Gender
+        ORDER BY RAND()
         LIMIT 1
-    ) AS ClassificationID,
-    2024, -- Example RegisterYear
-    1  -- Example DivisionID
-FROM
-    ArcherInfo a
-WHERE
-    a.ID = 1; -- Example ArcherID
-
+    ) AS ClassificationID, -- Classification determined by DOB
+    2023 AS RegisterYear, -- Assuming register year is 2023
+    FLOOR(RAND() * (SELECT MAX(ID) FROM Division)) + 1 AS DivisionID -- Random DivisionID
+FROM 
+    ArcherInfo;
