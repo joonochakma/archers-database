@@ -65,7 +65,8 @@
         if ($result && $result->num_rows > 0) {
             echo "<select name='ArcherID'>";
             while ($row = $result->fetch_assoc()) {
-                echo "<option value='" . $row['ID'] . "'>" . $row['FirstName'] . " " . $row['LastName'] . "</option>";
+                $selected = isset($_POST['ArcherID']) && $_POST['ArcherID'] == $row['ID'] ? 'selected' : '';
+                echo "<option value='" . $row['ID'] . "' $selected>" . $row['FirstName'] . " " . $row['LastName'] . "</option>";
             }
             echo "</select>";
         } else {
@@ -93,9 +94,14 @@
         $conn->close();
     }
 
-    function getClass() {
+    function getClass($archerID) {
         $conn = getDBConnection();
-        $sql = "SELECT ID, Description FROM Classification";
+        $sql = "SELECT c.ID, c.Description 
+                FROM Classification c
+                INNER JOIN ArcherInfo a ON c.MinimumAge <= TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) 
+                    AND c.MaximumAge >= TIMESTAMPDIFF(YEAR, a.DOB, CURDATE()) 
+                    AND c.Gender = a.Gender
+                WHERE a.ID = $archerID";
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0) {
@@ -105,7 +111,7 @@
             }
             echo "</select>";
         } else {
-            echo "No classes found.";
+            echo "No classes found for the selected archer.";
         }
 
         $conn->close();
@@ -153,11 +159,16 @@
             <label for="CompetitionID">Competition:</label>
             <?php echo getCompetition(); ?><br>
             <label for="ArcherID">Archer Name:</label>
-            <?php echo getArcherName(); ?><br>
+            <?php echo getArcherName(); ?>
+            <button type="submit" name="updateArcher">Retrieve Class</button><br>
             <label for="DivisionID">Equipment:</label>
             <?php echo getEquipment(); ?><br>
             <label for="ClassificationID">Class:</label>
-            <?php echo getClass(); ?><br>
+            <?php 
+            if (isset($_POST['ArcherID'])) {
+                getClass($_POST['ArcherID']);
+            } 
+            ?><br>
             <label for="RegisterYear">Year:</label>
             <?php echo getYears(); ?><br>
             <input type="submit" name="submitCategory" value="Add Category">
