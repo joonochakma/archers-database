@@ -120,7 +120,7 @@ CREATE TABLE EndScores(
     
 
     CREATE TABLE RoundArrows(
-    RoundID INT NOT NULL AUTO_INCREMENT,
+    RoundID INT NOT NULL,
     RangeID INT NOT NULL,
     ArrowsNo INT NOT NULL,
     FaceID INT NOT NULL,
@@ -138,6 +138,7 @@ CREATE TABLE EndScores(
     CategoryID INT NOT NULL,
     EndNo INT NOT NULL,
     ScoreDateTime DATETIME NOT NULL,  
+    Score INT NOT NULL,
     DivisionID INT NOT NULL,
     RoundID INT NOT NULL,
     CompetitionID INT NOT NULL,
