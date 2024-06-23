@@ -1,2 +1,2 @@
 # Archer's Database
-j
+used my sql and phpmyadmin
